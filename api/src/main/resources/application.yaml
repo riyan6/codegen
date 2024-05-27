@@ -1,0 +1,13 @@
+server:
+  port: 3000
+  tomcat:
+    threads:
+      max: 800
+      min-spare: 100
+    accept-count: 1000
+spring:
+  main:
+    keep-alive: true
+  threads:
+    virtual:
+      enabled: true
