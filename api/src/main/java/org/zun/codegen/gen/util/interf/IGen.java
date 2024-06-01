@@ -19,20 +19,20 @@ public interface IGen {
     ClassName I_SERVICE = ClassName.get("com.baomidou.mybatisplus.extension.service", "IService");
     ClassName SERVICE_IMPL = ClassName.get("com.baomidou.mybatisplus.extension.service.impl", "ServiceImpl");
 
-    default String toString(String packageName, String fileName, String content) {
+    default String toString(String packageName, String fileName, String author, String content) {
         StringBuffer sb = new StringBuffer();
         sb.append("""
                 /**
                  * XXX技术有限公司 版权所有Copyright (C) 2024
                  *
-                 * @projectName: pbms-parent
+                 * @projectName: xxx
                  * @Package: %s
                  * @ClassName: %s
-                 * @CreateUser: riyan6
+                 * @CreateUser: %s
                  * @CreateDate: %s
                  */
                 
-                """.formatted(packageName, fileName, DateUtil.format(new Date(), "yyyy-MM-dd")));
+                """.formatted(packageName, fileName, author, DateUtil.format(new Date(), "yyyy-MM-dd")));
 
         String[] lines = content.split(System.lineSeparator());
         for (String line : lines) {

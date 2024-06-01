@@ -16,25 +16,25 @@ import java.util.Date;
 @Component
 public class ServiceImplGenUtil implements IGen {
 
-    public String execute(ServiceImplGenIn gen) {
-        TypeSpec traceExtendInfoServiceImpl = TypeSpec.classBuilder(gen.getJavaName())
-                .superclass(ParameterizedTypeName.get(
-                        SERVICE_IMPL,
-                        ClassName.get(gen.getMapperPackage(), gen.getMapperName()),
-                        ClassName.get(gen.getEntityPackage(), gen.getEntityName())))
-                .addSuperinterface(ClassName.get(gen.getServicePackage(), gen.getServiceName()))
-                .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(Service.class)
-                .addJavadoc("""
-                        %s
-                        
-                        @author riyan6
-                        @since %s
-                        """.formatted(gen.getComment(), DateUtil.format(new Date(), "yyyy-MM-dd")))
-                .build();
-
-        JavaFile javaFile = JavaFile.builder(gen.getPackageName(), traceExtendInfoServiceImpl).build();
-        return toString(gen.getPackageName(), gen.getJavaName(), javaFile.toString());
-    }
+//    public String execute(ServiceImplGenIn gen) {
+//        TypeSpec traceExtendInfoServiceImpl = TypeSpec.classBuilder(gen.getJavaName())
+//                .superclass(ParameterizedTypeName.get(
+//                        SERVICE_IMPL,
+//                        ClassName.get(gen.getMapperPackage(), gen.getMapperName()),
+//                        ClassName.get(gen.getEntityPackage(), gen.getEntityName())))
+//                .addSuperinterface(ClassName.get(gen.getServicePackage(), gen.getServiceName()))
+//                .addModifiers(Modifier.PUBLIC)
+//                .addAnnotation(Service.class)
+//                .addJavadoc("""
+//                        %s
+//
+//                        @author riyan6
+//                        @since %s
+//                        """.formatted(gen.getComment(), DateUtil.format(new Date(), "yyyy-MM-dd")))
+//                .build();
+//
+//        JavaFile javaFile = JavaFile.builder(gen.getPackageName(), traceExtendInfoServiceImpl).build();
+//        return toString(gen.getPackageName(), gen.getJavaName(), javaFile.toString());
+//    }
 
 }

@@ -16,28 +16,28 @@ import java.util.Date;
 @Component
 public final class MapperGenUtil implements IGen {
 
-    @SneakyThrows
-    public String execute(MapperGenIn genIn) {
-        // 实体类
-        ClassName entityClass = ClassName.get(genIn.getEntityPackage(), genIn.getEntityName());
-
-        // 获取 BaseMapper 与实体类的包裹对象，即 BaseMapper<T>
-        ParameterizedTypeName parent = ParameterizedTypeName.get(BASE_MAPPER, entityClass);
-
-        // 创建类
-        TypeSpec.Builder clazz = TypeSpec.interfaceBuilder(genIn.getJavaName())
-                .addModifiers(Modifier.PUBLIC)
-                .addSuperinterface(parent)
-                .addJavadoc("""
-                        %s
-                        
-                        @author riyan6
-                        @since %s
-                        """.formatted(genIn.getComment(), DateUtil.format(new Date(), "yyyy-MM-dd")));
-
-        // java文件
-        JavaFile javaFile = JavaFile.builder(genIn.getPackageName(), clazz.build()).build();
-        return toString(genIn.getPackageName(), genIn.getJavaName(), javaFile.toString());
-    }
+//    @SneakyThrows
+//    public String execute(MapperGenIn genIn) {
+//        // 实体类
+//        ClassName entityClass = ClassName.get(genIn.getEntityPackage(), genIn.getEntityName());
+//
+//        // 获取 BaseMapper 与实体类的包裹对象，即 BaseMapper<T>
+//        ParameterizedTypeName parent = ParameterizedTypeName.get(BASE_MAPPER, entityClass);
+//
+//        // 创建类
+//        TypeSpec.Builder clazz = TypeSpec.interfaceBuilder(genIn.getJavaName())
+//                .addModifiers(Modifier.PUBLIC)
+//                .addSuperinterface(parent)
+//                .addJavadoc("""
+//                        %s
+//
+//                        @author riyan6
+//                        @since %s
+//                        """.formatted(genIn.getComment(), DateUtil.format(new Date(), "yyyy-MM-dd")));
+//
+//        // java文件
+//        JavaFile javaFile = JavaFile.builder(genIn.getPackageName(), clazz.build()).build();
+//        return toString(genIn.getPackageName(), genIn.getJavaName(), javaFile.toString());
+//    }
 
 }

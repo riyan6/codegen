@@ -16,6 +16,7 @@ import org.springframework.javapoet.FieldSpec;
 import org.springframework.javapoet.JavaFile;
 import org.springframework.javapoet.TypeSpec;
 import org.springframework.stereotype.Component;
+import org.zun.codegen.model.in.CodeGenIn;
 
 import javax.lang.model.element.Modifier;
 import java.lang.reflect.Type;
@@ -26,9 +27,9 @@ import java.util.List;
 @Component
 public class EntityGenUtil implements IGen {
 
-    public String execute(EntityGenIn genIn, List<TableColumn> columns) {
+    public String execute(CodeGenIn in, List<TableColumn> columns) {
         // 创建类
-        TypeSpec.Builder clazz = TypeSpec.classBuilder(genIn.getJavaName());
+        TypeSpec.Builder clazz = TypeSpec.classBuilder(in.getEntityClassName());
         // 类修饰
         clazz.addModifiers(Modifier.PUBLIC);
         clazz.addAnnotation(Data.class);
@@ -39,7 +40,7 @@ public class EntityGenUtil implements IGen {
         clazz.superclass(BasePo);
         // 添加注解
         AnnotationSpec tableNameAnnoSpec = AnnotationSpec.builder(TABLE_NAME)
-                .addMember("value", "$S", genIn.getTableName())
+                .addMember("value", "$S", in.getTableName())
                 .addMember("excludeProperty", "{$S, $S}", "isused", "isdel")
                 .build();
         clazz.addAnnotation(tableNameAnnoSpec);
@@ -47,17 +48,19 @@ public class EntityGenUtil implements IGen {
         clazz.addJavadoc("""
                 <p>%s</p>
                               
-                @author riyan6
+                @author %s
                 @since %s
-                """.formatted(genIn.getComment(), DateUtil.format(new Date(), "yyyy-MM-dd")));
+                """.formatted(in.getEntityClassDoc(), in.getAuthor(), DateUtil.format(new Date(), "yyyy-MM-dd")));
 
         // 添加不同的类属性
         for (TableColumn c : columns) {
+            // 特定属性跳过
             if (StrUtil.equals(c.getField(), "lastoperator") || StrUtil.equals(c.getField(), "lastoperatetime") || StrUtil.equals(c.getField(), "tenantid")
                     || StrUtil.equals(c.getField(), "creator") || StrUtil.equals(c.getField(), "creationdate") || StrUtil.equals(c.getField(), "t_id")) {
                 continue;
             }
 
+            // 添加 @ApiModelProperty 注解
             FieldSpec.Builder field = FieldSpec.builder(getFieldClassType(c.getType()), c.getField().equals("t_id") ? "tid" : c.getField(), Modifier.PRIVATE)
                     .addAnnotation(AnnotationSpec.builder(ClassName.get("io.swagger.annotations", "ApiModelProperty"))
                             .addMember("value", "$S", c.getComment())
@@ -75,14 +78,13 @@ public class EntityGenUtil implements IGen {
                         .build());
             }
 
-            // setTableFieldAnno(field, c);
             clazz.addField(field.build());
         }
 
         // Java 文件
-        JavaFile javaFile = JavaFile.builder(genIn.getPackageName(), clazz.build())
+        JavaFile javaFile = JavaFile.builder(in.getEntityPackage(), clazz.build())
                 .build();
-        return toString(genIn.getPackageName(), genIn.getJavaName(), javaFile.toString());
+        return toString(in.getEntityPackage(), in.getEntityClassName(), in.getAuthor(), javaFile.toString());
     }
 
 
